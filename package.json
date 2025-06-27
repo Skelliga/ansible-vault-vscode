@@ -1,0 +1,33 @@
+{
+  "name": "cli-transform",
+  "displayName": "CLI Transform",
+  "description": "Transform selected text using the output of a CLI command.",
+  "version": "0.0.1",
+  "publisher": "codex",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "activationEvents": [
+    "onCommand:cli-transform.run"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "cli-transform.run",
+        "title": "Transform Selection With CLI"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "CLI Transform",
+      "properties": {
+        "cli-transform.command": {
+          "type": "string",
+          "default": "rev",
+          "description": "The CLI command to run. Selected text will be piped to it on STDIN."
+        }
+      }
+    }
+  }
+}
