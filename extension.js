@@ -134,8 +134,12 @@ async function encryptVault(text, passwordFile) {
 
 async function decryptVault(text, passwordFile) {
     try {
+        const cleaned = text
+            .split(/\r?\n/)
+            .map(line => line.trimStart())
+            .join('\n');
         const tmp = path.join(os.tmpdir(), `vault-${Date.now()}`);
-        await fs.promises.writeFile(tmp, text);
+        await fs.promises.writeFile(tmp, cleaned);
         console.log(`Decrypting selection with ansible-vault: ${tmp}`);
         if (outputChannel) {
             outputChannel.appendLine(`Decrypting selection with ansible-vault: ${tmp}`);

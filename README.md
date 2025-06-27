@@ -8,6 +8,7 @@ This extension replaces the selected text in the active editor with the output o
 - Encrypt or decrypt selections using `ansible-vault`.
 - Configure a password file for `ansible-vault` operations.
 - View debug logs in the "CLI Transform" output channel.
+- Decryption automatically strips leading indentation so you can select YAML vault blocks without adjusting whitespace.
 
 ## Configuration
 - `cli-transform.command`: Command to run. The default is `rev`, which reverses the input text. The selected text is sent to the command on `stdin` and whatever the command prints to `stdout` replaces the selection.
