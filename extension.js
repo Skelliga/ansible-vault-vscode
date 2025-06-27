@@ -68,10 +68,28 @@ function runCli(command, input) {
         console.log(`Running command: ${command}`);
         const child = spawn(command, { shell: true });
         let output = '';
+        let stderr = '';
         child.stdout.on('data', data => output += data.toString());
-        child.stderr.on('data', data => console.error(data.toString()));
-        child.on('error', () => resolve(undefined));
-        child.on('close', () => resolve(output));
+        child.stderr.on('data', data => {
+            const msg = data.toString();
+            stderr += msg;
+            console.error(msg);
+        });
+        child.on('error', err => {
+            console.error('Failed to start process', err);
+            resolve(undefined);
+        });
+        child.on('close', code => {
+            if (code === 0) {
+                resolve(output);
+            } else {
+                console.error(`Command exited with code ${code}`);
+                if (stderr) {
+                    console.error(stderr);
+                }
+                resolve(undefined);
+            }
+        });
         if (input) {
             child.stdin.write(input);
         }
