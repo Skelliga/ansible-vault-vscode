@@ -8,7 +8,9 @@
     "vscode": "^1.80.0"
   },
   "activationEvents": [
-    "onCommand:cli-transform.run"
+    "onCommand:cli-transform.run",
+    "onCommand:cli-transform.encryptVault",
+    "onCommand:cli-transform.decryptVault"
   ],
   "main": "./extension.js",
   "contributes": {
@@ -16,6 +18,14 @@
       {
         "command": "cli-transform.run",
         "title": "Transform Selection With CLI"
+      },
+      {
+        "command": "cli-transform.encryptVault",
+        "title": "Encrypt Selection With Ansible Vault"
+      },
+      {
+        "command": "cli-transform.decryptVault",
+        "title": "Decrypt Selection With Ansible Vault"
       }
     ],
     "configuration": {
@@ -26,6 +36,11 @@
           "type": "string",
           "default": "rev",
           "description": "The CLI command to run. Selected text will be piped to it on STDIN."
+        },
+        "cli-transform.vaultPasswordFile": {
+          "type": "string",
+          "default": "",
+          "description": "Path to ansible-vault password file passed with --vault-password-file."
         }
       }
     }
