@@ -36,9 +36,10 @@ function activate(context) {
             vscode.window.showInformationMessage('No active text editor');
             return;
         }
+        const passwordFile = vscode.workspace.getConfiguration('cli-transform').get('vaultPasswordFile', '');
         for (const selection of editor.selections) {
             const text = editor.document.getText(selection);
-            const result = await encryptVault(text);
+            const result = await encryptVault(text, passwordFile);
             if (result.code !== 0) {
                 vscode.window.showErrorMessage('Failed to encrypt with ansible-vault' + (result.stderr ? `\n${result.stderr}` : ''));
                 return;
@@ -54,9 +55,10 @@ function activate(context) {
             vscode.window.showInformationMessage('No active text editor');
             return;
         }
+        const passwordFile = vscode.workspace.getConfiguration('cli-transform').get('vaultPasswordFile', '');
         for (const selection of editor.selections) {
             const text = editor.document.getText(selection);
-            const result = await decryptVault(text);
+            const result = await decryptVault(text, passwordFile);
             if (result.code !== 0) {
                 vscode.window.showErrorMessage('Failed to decrypt with ansible-vault' + (result.stderr ? `\n${result.stderr}` : ''));
                 return;
@@ -109,7 +111,7 @@ function runCli(command, input) {
     });
 }
 
-async function encryptVault(text) {
+async function encryptVault(text, passwordFile) {
     try {
         const tmp = path.join(os.tmpdir(), `vault-${Date.now()}`);
         await fs.promises.writeFile(tmp, text);
@@ -117,7 +119,8 @@ async function encryptVault(text) {
         if (outputChannel) {
             outputChannel.appendLine(`Encrypting selection with ansible-vault: ${tmp}`);
         }
-        const result = await runCli(`ansible-vault encrypt ${tmp} --output -`);
+        const pwOpt = passwordFile ? ` --vault-password-file ${passwordFile}` : '';
+        const result = await runCli(`ansible-vault encrypt ${tmp}${pwOpt} --output -`);
         await fs.promises.unlink(tmp);
         return result;
     } catch (err) {
@@ -129,7 +132,7 @@ async function encryptVault(text) {
     }
 }
 
-async function decryptVault(text) {
+async function decryptVault(text, passwordFile) {
     try {
         const tmp = path.join(os.tmpdir(), `vault-${Date.now()}`);
         await fs.promises.writeFile(tmp, text);
@@ -137,7 +140,8 @@ async function decryptVault(text) {
         if (outputChannel) {
             outputChannel.appendLine(`Decrypting selection with ansible-vault: ${tmp}`);
         }
-        const result = await runCli(`ansible-vault decrypt ${tmp} --output -`);
+        const pwOpt = passwordFile ? ` --vault-password-file ${passwordFile}` : '';
+        const result = await runCli(`ansible-vault decrypt ${tmp}${pwOpt} --output -`);
         await fs.promises.unlink(tmp);
         return result;
     } catch (err) {

@@ -36,6 +36,11 @@
           "type": "string",
           "default": "rev",
           "description": "The CLI command to run. Selected text will be piped to it on STDIN."
+        },
+        "cli-transform.vaultPasswordFile": {
+          "type": "string",
+          "default": "",
+          "description": "Path to ansible-vault password file passed with --vault-password-file."
         }
       }
     }
