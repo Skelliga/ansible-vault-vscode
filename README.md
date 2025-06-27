@@ -6,6 +6,7 @@ This extension replaces the selected text in the active editor with the output o
 - Run a configurable CLI command on the selected text.
 - Works with multiple selections.
 - Encrypt or decrypt selections using `ansible-vault`.
+- View debug logs in the "CLI Transform" output channel.
 
 ## Configuration
 - `cli-transform.command`: Command to run. The default is `rev`, which reverses the input text. The selected text is sent to the command on `stdin` and whatever the command prints to `stdout` replaces the selection.
@@ -14,4 +15,5 @@ This extension replaces the selected text in the active editor with the output o
 1. Select text in the editor.
 2. Execute the `Transform Selection With CLI` command from the Command Palette or via keyboard shortcut if you assign one.
 3. For `ansible-vault` operations use `Encrypt Selection With Ansible Vault` or `Decrypt Selection With Ansible Vault`.
+4. Check the "CLI Transform" output channel for detailed logs and error messages.
 
